@@ -77,7 +77,7 @@ const LoginComponent: React.FC<Props> = ({ onLogin }) => {
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
               {message && <p className="text-sm text-green-500">{message}</p>}
-              <Button type="submit" className="w-full">
+              <Button type="submit" className="w-full bg-gray-900 hover:bg-slate-500 hover:text-gray-900 text-white font-bold">
                 Login
               </Button>
               <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
@@ -116,7 +116,7 @@ const LoginComponent: React.FC<Props> = ({ onLogin }) => {
               </div>
           <div className="text-center text-sm">
             Don&apos;t have an account?{" "}
-            <a href="/register" className="underline underline-offset-4">
+            <a href="/register" className="underline underline-offset-4 text-gray-900 hover:text-slate-500 font-bold">
               Sign up
             </a>
           </div>
