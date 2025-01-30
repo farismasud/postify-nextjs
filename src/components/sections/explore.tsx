@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { getExplorePosts } from "@/api/api";
 import { Alert } from "@/components/ui/alert";
 import { motion } from "framer-motion";
-
+import PostCard from "@/components/sections/post";
 
 interface User {
   id: string;
@@ -116,15 +116,15 @@ const ExploreComponent = () => {
       </div>
 
       {selectedPost && (
-  <>
-    {/* Backdrop dengan efek blur */}
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md z-40"
-      onClick={handleClosePostCard}
-    />
+      <>
+        {/* Backdrop dengan efek blur */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-md z-40"
+          onClick={handleClosePostCard}
+        />
 
     {/* Modal Container */}
     <motion.div
