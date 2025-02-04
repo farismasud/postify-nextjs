@@ -4,10 +4,14 @@ import {
   getPostsByUserId,
   getFollowersByUserId,
   getFollowingByUserId,
+  followUser,
+  unfollowUser,
+  getLoggedUser,
 } from "@/api/api";
 import { useRouter } from "next/router";
 import FollowerPopup from "./followerPopup";
 import FollowingPopup from "./followingPopup";
+import { Button } from "@/components/ui/button"
 
 interface Post {
   id: string;
@@ -57,13 +61,14 @@ interface Following {
 const Profile = () => {
   const router = useRouter();
   const { id: userId } = router.query;
-
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [followers, setFollowers] = useState<Follower[]>([]);
   const [following, setFollowing] = useState<Following[]>([]);
+  const [isFollowing, setIsFollowing] = useState(false);
   const [isFollowersModalOpen, setIsFollowersModalOpen] = useState(false);
   const [isFollowingModalOpen, setIsFollowingModalOpen] = useState(false);
+  const [loggedUserId, setLoggedUserId] = useState(null);
   const [error, setError] = useState<string>("");
 
   useEffect(() => {
@@ -71,12 +76,17 @@ const Profile = () => {
 
     const fetchData = async () => {
       try {
-        const [userResponse, postsResponse] = await Promise.all([
+        const [userResponse, postsResponse, loggedUserResponse] = await Promise.all([
           getUserProfile(userId as string),
           getPostsByUserId(userId as string),
+          getLoggedUser(),
         ]);
         setUser(userResponse.data.data);
         setPosts(postsResponse.data.data.posts);
+        setLoggedUserId(loggedUserResponse.data.data.id);
+        setIsFollowing(
+          userResponse.data.data.followers?.some((follower: Follower) => follower.id === loggedUserResponse.data.data.id)
+        );
       } catch (error: any) {
         setError(error.message || "Error fetching data");
       }
@@ -112,6 +122,29 @@ const Profile = () => {
 
   const handlePostClick = (postId: string) => {
     router.push(`/post/${postId}`);
+  };
+
+  const handleFollowToggle = async () => {
+    try {
+      if (isFollowing) {
+        await unfollowUser(userId as string);
+        setIsFollowing(false);
+      } else {
+        await followUser(userId as string);
+        setIsFollowing(true);
+      }
+    } catch (error : any) {
+      setError(error.message || "Error toggling follow state");
+    }
+  };
+
+  const handleUnfollow = async () => {
+    try {
+      await unfollowUser(userId as string);
+      setIsFollowing(false);
+    } catch (error : any) {
+      setError(error.message || "Error unfollowing user");
+    }
   };
 
   if (error) {
@@ -155,6 +188,13 @@ const Profile = () => {
             <strong>Following</strong>
             <strong>{user.totalFollowing}</strong>
           </p>
+          <Button
+            variant="secondary"
+            className="mt-4"
+            onClick={handleFollowToggle}
+          >
+            {isFollowing ? "Unfollow" : "Follow"}
+          </Button>
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center items-center">
@@ -180,3 +220,5 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
