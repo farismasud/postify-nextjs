@@ -119,6 +119,8 @@ export const getViewsByStoryId = (storyId: string): Promise<AxiosResponse> =>
   axiosInstance.get(`/story-views/${storyId}`);
 export const getMyFollowingStory = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/following-story", { params: { size, page } });
+export const getMyStory = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+  axiosInstance.get("/my-story", { params: { size, page } });
 
 // **Upload Image**
 export const uploadImage = (file: File): Promise<AxiosResponse> => {

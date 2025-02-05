@@ -10,6 +10,7 @@ import {
 import { useRouter } from "next/router";
 import { Card } from "@/components/ui/card";
 import { Alert } from "@/components/ui/alert";
+import StoryComponent from "@/components/sections/story";
 import { Heart, MessageCircle, Plus } from "lucide-react";
 
 interface User {
@@ -183,6 +184,9 @@ const Home = () => {
   return (
     <div className="bg-purple flex flex-col items-center justify-center min-h-screen bg-transparent">
       {error && <Alert variant="destructive">{error}</Alert>}
+      <div className="w-[1000px]">
+        <StoryComponent />
+      </div>
       <div className="flex flex-col gap-6 items-center">
         {" "}
         {posts.map((post: Post, index: number) => (
@@ -190,6 +194,7 @@ const Home = () => {
             key={post.id}
             className="p-4 h-auto w-[900px] flex flex-col rounded-lg shadow-lg glassmorphism mb-6">
             {post.user && (
+
               <div
                 className="flex cursor-pointer text-gray-900 mb-5"
                 onClick={() => router.push(`/profile/${post.user?.id}`)}
