@@ -9,6 +9,8 @@ import FollowerPopup from "./followerPopup";
 import FollowingPopup from "./followingPopup";
 import UpdateProfile from "./updateProfile";
 import { useRouter } from "next/router";
+import { Button } from "@/components/ui/button"
+import {CameraIcon, UserIcon, UsersRound} from "lucide-react"
 
 interface Post {
   id: string;
@@ -137,8 +139,8 @@ const Profile = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div className="bg-black flex flex-col items-center justify-center min-h-screen">
-      <div className="flex flex-col items-center mb-8">
+    <div className="bg-zinc-800 flex flex-col items-center justify-start min-h-screen p-4">
+      <div className="flex flex-col items-center mb-6 w-full max-w-screen-sm">
         <img
           src={user.profilePictureUrl}
           alt={user.username}
@@ -146,44 +148,49 @@ const Profile = () => {
             e.currentTarget.src =
               "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
           }}
-          className="w-24 h-24 rounded-full border-2 border-white"
+          className="w-32 h-32 rounded-full border-4 border-primary mb-4"
         />
-        <h1 className="text-2xl font-bold text-white">{user.username}</h1>
-        <p className="text-white">{user.bio}</p>
-        <div className="grid grid-cols-3 gap-5 mt-4">
-          <p className="flex flex-col items-center text-white">
-            <strong>Posts</strong>
-            <strong>{posts.length}</strong>
-          </p>
-          <p
-            className="flex flex-col items-center cursor-pointer text-white"
+        <h1 className="text-3xl font-semibold text-primary">{user.username}</h1>
+        <p className="text-muted mt-2">{user.bio}</p>
+        <div className="flex justify-around w-full mt-6">
+          <div className="flex flex-col items-center text-primary">
+            <CameraIcon className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Posts</span>
+            <span className="text-xl font-bold text-zinc-300">{posts.length}</span>
+          </div>
+          <div
+            className="flex flex-col items-center cursor-pointer text-primary"
             onClick={handleViewFollowers}
           >
-            <strong>Followers</strong>
-            <strong>{user.totalFollowers}</strong>
-          </p>
-          <p
-            className="flex flex-col items-center cursor-pointer text-white"
+            <UserIcon className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Followers</span>
+            <span className="text-xl font-bold text-zinc-300">{user.totalFollowers}</span>
+          </div>
+          <div
+            className="flex flex-col items-center cursor-pointer text-primary"
             onClick={handleViewFollowing}
           >
-            <strong>Following</strong>
-            <strong>{user.totalFollowing}</strong>
-          </p>
+            <UsersRound className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Following</span>
+            <span className="text-xl font-bold text-zinc-300">{user.totalFollowing}</span>
+          </div>
         </div>
       </div>
-      <button
+      <Button
+        variant="outline"
+        size="lg"
+        className="mt-4"
         onClick={() => setIsModalOpen(true)}
-        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
       >
         Edit Profile
-      </button>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center items-center">
+      </Button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center items-center mt-8 w-full max-w-screen-lg">
         {posts.map((post) => (
-          <div key={post.id} className="w-full p-2 flex flex-col items-center">
+          <div key={post.id} className="flex flex-col items-center w-full">
             <img
               src={post.imageUrl}
               alt={post.caption}
-              className="object-cover w-full h-40 rounded-md cursor-pointer"
+              className="object-cover w-full h-48 rounded-lg cursor-pointer"
               onClick={() => handlePostClick(post.id)}
             />
           </div>
@@ -196,11 +203,11 @@ const Profile = () => {
         <FollowingPopup following={following} onClose={closeModal} />
       )}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+        <div className="fixed inset-0 bg-opacity-60 bg-gray-900 flex justify-center items-center">
+          <div className="bg-zinc-300 p-8 rounded-lg shadow-lg w-96 relative">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
             >
               ✖
             </button>

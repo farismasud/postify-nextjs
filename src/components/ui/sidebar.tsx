@@ -41,18 +41,18 @@ const Sidebar: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/profile">
-                <button className="flex items-center gap-2">
-                  <CircleUser size={30} strokeWidth="2" />
-                </button>
-              </Link>
-            </li>
-            <li>
               <button
                 onClick={toggleCreatePost}
                 className="flex items-center gap-2">
                 <PlusCircle size={30} strokeWidth="2" />
               </button>
+            </li>
+            <li>
+              <Link href="/profile">
+                <button className="flex items-center gap-2">
+                  <CircleUser size={30} strokeWidth="2" />
+                </button>
+              </Link>
             </li>
           </ul>
         </nav>
