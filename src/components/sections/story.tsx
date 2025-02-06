@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Plus, X, Upload } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 interface Story {
   id: string;
@@ -124,15 +125,14 @@ const StoryComponent = () => {
   return (
     <div className="p-6 md:p-6">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">Stories</h1>
-
-        <div className="flex gap-4 overflow-x-auto pb-4">
+      <ScrollArea className="w-full pb-4">
+          <div className="flex gap-4">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <button className="w-20 h-20 flex flex-col items-center justify-center border-2 border-dashed border-blue-400 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors">
-                <Plus size={24} className="text-blue-500" />
-                <span className="text-xs text-blue-500 mt-1">New Story</span>
-              </button>
+            <button className="w-[5rem] h-[5rem] aspect-square flex flex-col items-center justify-center border-2 border-dashed border-blue-400 rounded-full bg-blue-50 hover:bg-blue-100 transition-colors">
+              <Plus size={24} className="text-blue-500" />
+              <span className="text-xs text-blue-500 mt-1">New Story</span>
+            </button>
             </DialogTrigger>
             <DialogContent className="p-6 rounded-xl bg-white shadow-xl w-96">
             <DialogTitle className="text-lg font-semibold text-gray-800">Create Story</DialogTitle>
@@ -192,7 +192,7 @@ const StoryComponent = () => {
               </p>
             </div>
           ))}
-        </div>
+          </div>
 
         {selectedStory && (
           <Dialog open={!!selectedStory} onOpenChange={() => setSelectedStory(null)}>
@@ -209,7 +209,7 @@ const StoryComponent = () => {
                       src={stories[currentStoryIndex].user.profilePictureUrl}
                       alt={stories[currentStoryIndex].user.username}
                       className="w-8 h-8 rounded-full border-2 border-white"
-                    />
+                      />
                     <span className="text-white font-medium">
                       {stories[currentStoryIndex].user.username}
                     </span>
@@ -248,6 +248,8 @@ const StoryComponent = () => {
             </DialogContent>
           </Dialog>
         )}
+        <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
