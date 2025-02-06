@@ -6,8 +6,7 @@ import {
   deleteStory,
   getMyStory,
 } from "@/api/api";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { useToast } from "@/components/ui/use-toast";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Plus, X, Upload } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
@@ -24,6 +23,7 @@ interface Story {
 }
 
 const StoryComponent = () => {
+  const { toast } = useToast();
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [newStory, setNewStory] = useState<{ imageUrl: string; caption: string }>({
@@ -45,8 +45,11 @@ const StoryComponent = () => {
       const responseMyStory = await getMyStory(10, 1);
       setStories([...responseMyFollowingStory.data.data.stories, ...responseMyStory.data.data.stories]);
     } catch (err: any) {
-      toast.error(err.response?.data?.message
-         || "Failed to fetch stories");
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to fetch stories",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -54,38 +57,35 @@ const StoryComponent = () => {
 
   const handleCreateStory = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!newStory.imageUrl.trim() || !newStory.caption.trim()) {
-      toast.warn("Please fill in all fields");
+      toast({ title: "Warning", description: "Please fill in all fields", variant: "destructive" });
       return;
     }
-
     try {
       setLoading(true);
-
       const response = await createStory(newStory.imageUrl, newStory.caption);
       const createdStory = response.data.data;
 
       if (!createdStory || !createdStory.id) {
         throw new Error("Story ID is missing");
       }
-
-      // Update daftar stories dengan data lengkap dari API
       setStories((prev) => [
         {
           ...createdStory,
           id: createdStory.id,
-          user: createdStory.user || { id: "unknown", username: "Unknown", profilePictureUrl: "" }, // Handle jika user tidak ada
+          user: createdStory.user || { id: "unknown", username: "Unknown", profilePictureUrl: "" },
         },
         ...prev,
       ]);
-
-      // Reset form setelah sukses
       setNewStory({ imageUrl: "", caption: "" });
       setIsOpen(false);
-      toast.success("Story created successfully");
+      toast({ title: "Success", description: "Story created successfully" });
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to create story");
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to create story",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -93,15 +93,20 @@ const StoryComponent = () => {
 
 
 
+
   const handleDeleteStory = async (storyId: string) => {
     try {
       await deleteStory(storyId);
       setStories((prev) => prev.filter((s) => s.id !== storyId));
-      toast.success("Story deleted successfully");
+      toast({ title: "Success", description: "Story deleted successfully" });
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to delete story");
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to delete story",
+        variant: "destructive",
+      });
     }
-  };
+  }
 
   const handleStoryNavigation = (direction: 'prev' | 'next') => {
     if (direction === 'next' && currentStoryIndex < stories.length - 1) {
@@ -118,7 +123,11 @@ const StoryComponent = () => {
       const index = stories.findIndex((s) => s.id === storyId);
       setCurrentStoryIndex(index);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to fetch story details");
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || "Failed to fetch story",
+        variant: "destructive",
+      });
     }
   };
 
@@ -251,7 +260,6 @@ const StoryComponent = () => {
         <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };

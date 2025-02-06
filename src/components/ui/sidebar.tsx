@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-[4.5rem] min-h-full bg-black text-white flex flex-col justify-between">
+    <aside className="w-[4rem] min-h-full bg-zinc-800 text-gray-300 flex flex-col justify-between hover:bg-zinc-700 transition-colors duration-300">
       <div className="p-4">
         logo
       </div>
