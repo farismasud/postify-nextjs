@@ -74,14 +74,16 @@ const Explore = () => {
 
   return (
     <ToastProvider>
-      <div className="glassmorphism flex flex-col items-center justify-center min-h-100vh relative">
+      <div className="flex flex-col items-center min-h-screen bg-zinc-800 p-4">
         {error && (
           <Toast>
             <div className="toast-body">{error}</div>
             <ToastAction altText="Close" />
           </Toast>
         )}
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 gap-4 p-4 w-full max-w-7xl">
+
+        {/* Grid Layout */}
+        <div className="w-full max-w-[600px] space-y-4">
           {loading
             ? Array.from({ length: 8 }).map((_, index) => (
                 <Skeleton key={index} className="h-64 w-full rounded-lg" />
@@ -91,51 +93,61 @@ const Explore = () => {
                   key={post.id}
                   ref={index === posts.length - 1 ? lastPostRef : null}
                   onClick={() => setSelectedPostId(post.id)}
-                  className="cursor-pointer relative group"
+                  className="bg-white rounded-lg shadow-sm border border-zinc-900 cursor-pointer"
                 >
-                  <img
-                    src={post.imageUrl}
-                    alt={post.caption}
-                    className="w-full h-64 object-cover rounded-lg shadow-md"
-                    onError={(e) => {
-                      e.currentTarget.src =
-                        "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center text-white">
-                    {post.user && (
-                      <>
-                        <img
-                          src={post.user.profilePictureUrl}
-                          alt={post.user.username}
-                          className="w-16 h-16 rounded-full mb-2"
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
-                          }}
-                        />
-                        <p className="font-bold">{post.user.username}</p>
-                        <p className="mt-1">{post.caption}</p>
-                        <p className="mt-1">❤️ {post.totalLikes}</p>
-                      </>
-                    )}
+                  {/* User Info */}
+                  {post.user && (
+                    <div className="flex items-center p-4">
+                      <img
+                        src={post.user.profilePictureUrl}
+                        alt={post.user.username}
+                        className="w-10 h-10 rounded-full mr-3"
+                        onError={(e) => {
+                          e.currentTarget.src =
+                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
+                        }}
+                      />
+                      <span className="font-bold text-lg text-gray-600">
+                        {post.user.username}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Post Image */}
+                  {post.imageUrl && (
+                    <img
+                      src={post.imageUrl}
+                      alt={post.caption}
+                      className="w-full h-auto object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
+                      }}
+                    />
+                  )}
+
+                  {/* Caption */}
+                  <div className="p-4">
+                    <p className="text-gray-600 mb-2">{post.caption}</p>
                   </div>
                 </div>
               ))}
         </div>
 
+        {/* Post Card Modal */}
         {selectedPostId && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="fixed inset-0 flex items-center justify-center z-50"
+            className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
           >
             <PostCard postId={selectedPostId} onClose={handleClosePostCard} />
           </motion.div>
         )}
 
+        {/* Toast Notification */}
         {toastMessage && (
           <Toast>
             <div className="toast-body">{toastMessage}</div>
@@ -148,4 +160,3 @@ const Explore = () => {
 };
 
 export default Explore;
-
