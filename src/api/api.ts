@@ -4,8 +4,8 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 
-const API_URL = "https://photo-sharing-api-bootcamp.do.dibimbing.id/api/v1";
-const API_KEY = "c7b411cc-0e7c-4ad1-aa3f-822b00e7734b";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 
 // Konfigurasi axios instance
 const axiosInstance: AxiosInstance = axios.create({
