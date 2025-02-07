@@ -4,58 +4,69 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { uploadImage, createPost } from "@/api/api";
+import { useToast } from "@/components/ui/use-toast";
 
 const ImageUploadPost = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const { toast } = useToast();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setError("");
+      setImageUrl(""); // Reset URL jika user memilih file
+    }
+  };
+
+  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setImageUrl(event.target.value);
+    setSelectedFile(null); // Reset file jika user memasukkan URL
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoading(true);
-    setError("");
-    setSuccess("");
 
     try {
-      if (!selectedFile) {
-        throw new Error("Please select an image file");
+      if (!selectedFile && !imageUrl.trim()) {
+        throw new Error("Please select an image file or enter an image URL");
       }
 
       if (!caption.trim()) {
         throw new Error("Please enter a caption");
       }
 
-      const uploadResponse = await uploadImage(selectedFile);
-      const imageUrl = uploadResponse.data.url;
+      let finalImageUrl = imageUrl.trim();
+      if (selectedFile) {
+        const uploadResponse = await uploadImage(selectedFile);
+        finalImageUrl = uploadResponse.data.url;
+      }
 
       await createPost({
-        imageUrl,
+        imageUrl: finalImageUrl,
         caption: caption.trim(),
       });
-
-      setSuccess("Post created successfully!");
+      toast({
+        description: "Post created successfully!",
+        variant: "default" });
       setCaption("");
       setSelectedFile(null);
-
+      setImageUrl("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
     } catch (err) {
-      setError(
-        (err as Error).message || "Something went wrong. Please try again."
-      );
+      toast({
+        description: (err as Error).message || "Something went wrong.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -75,7 +86,18 @@ const ImageUploadPost = () => {
               onChange={handleFileChange}
               ref={fileInputRef}
               className="w-full"
-              disabled={loading}
+              disabled={loading || !!imageUrl}
+            />
+          </div>
+
+          <div>
+            <Input
+              type="text"
+              placeholder="Or enter image URL..."
+              value={imageUrl}
+              onChange={handleUrlChange}
+              className="w-full"
+              disabled={loading || !!selectedFile}
             />
           </div>
 
@@ -88,9 +110,6 @@ const ImageUploadPost = () => {
               disabled={loading}
             />
           </div>
-
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-          {success && <div className="text-green-500 text-sm">{success}</div>}
 
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Creating Post..." : "Create Post"}

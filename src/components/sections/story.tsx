@@ -41,8 +41,8 @@ const StoryComponent = () => {
   const fetchStories = async () => {
     setLoading(true);
     try {
-      const responseMyFollowingStory = await getMyFollowingStory(10, 1);
-      const responseMyStory = await getMyStory(10, 1);
+      const responseMyFollowingStory = await getMyFollowingStory();
+      const responseMyStory = await getMyStory();
       setStories([...responseMyFollowingStory.data.data.stories, ...responseMyStory.data.data.stories]);
     } catch (err: any) {
       toast({
@@ -183,7 +183,15 @@ const StoryComponent = () => {
           {stories.map((story) => (
             <div key={story.id} className="relative group cursor-pointer" onClick={() => handleStoryClick(story.id)}>
             <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-500">
-              <img src={story.imageUrl} alt={story.caption} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+              <img
+                src={story.imageUrl}
+                alt={story.caption}
+                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                }}
+              />
             </div>
               <div className="absolute -top-1 -right-1">
                 <button
@@ -211,6 +219,10 @@ const StoryComponent = () => {
                   src={stories[currentStoryIndex].imageUrl}
                   alt={stories[currentStoryIndex].caption}
                   className="w-full h-auto"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                  }}
                 />
                 <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/50 to-transparent">
                   <div className="flex items-center space-x-2">
@@ -265,3 +277,4 @@ const StoryComponent = () => {
 };
 
 export default StoryComponent;
+

@@ -11,7 +11,9 @@ import {
 import { useRouter } from "next/router";
 import FollowerPopup from "./followerPopup";
 import FollowingPopup from "./followingPopup";
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
+import { toast } from "react-hot-toast";
+import { CameraIcon, UserIcon, UsersRound } from "lucide-react";
 
 interface Post {
   id: string;
@@ -48,14 +50,14 @@ interface Follower {
   id: string;
   username: string;
   profilePictureUrl: string;
-  // Add other fields if necessary
+  isFollowing: boolean;
 }
 
 interface Following {
   id: string;
   username: string;
   profilePictureUrl: string;
-  // Add other fields if necessary
+  isFollowing: boolean;
 }
 
 const Profile = () => {
@@ -129,21 +131,15 @@ const Profile = () => {
       if (isFollowing) {
         await unfollowUser(userId as string);
         setIsFollowing(false);
+        toast.success("Unfollowed successfully");
       } else {
         await followUser(userId as string);
         setIsFollowing(true);
+        toast.success("Followed successfully");
       }
-    } catch (error : any) {
+    } catch (error: any) {
       setError(error.message || "Error toggling follow state");
-    }
-  };
-
-  const handleUnfollow = async () => {
-    try {
-      await unfollowUser(userId as string);
-      setIsFollowing(false);
-    } catch (error : any) {
-      setError(error.message || "Error unfollowing user");
+      toast.error("Error toggling follow state");
     }
   };
 
@@ -156,8 +152,8 @@ const Profile = () => {
   }
 
   return (
-    <div className="bg-black flex flex-col items-center justify-center min-h-screen">
-      <div className="flex flex-col items-center mb-8">
+    <div className="bg-zinc-800 flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col items-center mb-8 w-full max-w-screen-sm">
         <img
           src={user.profilePictureUrl}
           alt={user.username}
@@ -165,45 +161,53 @@ const Profile = () => {
             e.currentTarget.src =
               "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
           }}
-          className="w-24 h-24 rounded-full"
+          className="w-32 h-32 rounded-full border-4 border-primary mb-4"
         />
-        <h1 className="text-2xl font-bold">{user.username}</h1>
-        <p className="text-white">{user.bio}</p>
-        <div className="grid grid-cols-3 gap-5 mt-4">
-          <p className="flex flex-col items-center">
-            <strong>Posts</strong>
-            <strong>{posts.length}</strong>
-          </p>
-          <p
-            className="flex flex-col items-center cursor-pointer"
-            onClick={handleViewFollowers} // Directly call function
+        <h1 className="text-3xl font-semibold text-primary text-zinc-300">{user.username}</h1>
+        <p className="text-muted mt-2">{user.bio}</p>
+        <div className="flex justify-around w-full mt-6">
+          <div className="flex flex-col items-center text-primary">
+            <CameraIcon className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Posts</span>
+            <span className="text-xl font-bold text-zinc-300">{posts.length}</span>
+          </div>
+          <div
+            className="flex flex-col items-center cursor-pointer text-primary"
+            onClick={handleViewFollowers}
           >
-            <strong>Followers</strong>
-            <strong>{user.totalFollowers}</strong>
-          </p>
-          <p
-            className="flex flex-col items-center cursor-pointer"
-            onClick={handleViewFollowing} // Directly call function
+            <UserIcon className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Followers</span>
+            <span className="text-xl font-bold text-zinc-300">{user.totalFollowers}</span>
+          </div>
+          <div
+            className="flex flex-col items-center cursor-pointer text-primary"
+            onClick={handleViewFollowing}
           >
-            <strong>Following</strong>
-            <strong>{user.totalFollowing}</strong>
-          </p>
-          <Button
-            variant="secondary"
-            className="mt-4"
-            onClick={handleFollowToggle}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+            <UsersRound className="w-6 h-6 text-zinc-300" />
+            <span className="text-lg font-bold text-zinc-300">Following</span>
+            <span className="text-xl font-bold text-zinc-300">{user.totalFollowing}</span>
+          </div>
         </div>
+        <Button
+          variant="outline"
+          size="lg"
+          className="mt-4"
+          onClick={handleFollowToggle}
+        >
+          {isFollowing ? "Unfollow" : "Follow"}
+        </Button>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center items-center">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center items-center mt-8 w-full max-w-screen-lg">
         {posts.map((post) => (
-          <div key={post.id} className="w-full p-2 flex flex-col items-center">
+          <div key={post.id} className="flex flex-col items-center w-full">
             <img
               src={post.imageUrl}
               alt={post.caption}
-              className="object-cover w-full h-40 rounded-md cursor-pointer"
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+              }}
+              className="object-cover w-full h-48 rounded-lg cursor-pointer"
               onClick={() => handlePostClick(post.id)}
             />
           </div>
@@ -220,5 +224,3 @@ const Profile = () => {
 };
 
 export default Profile;
-
-

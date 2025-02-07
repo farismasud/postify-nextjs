@@ -9,8 +9,8 @@ import FollowerPopup from "./followerPopup";
 import FollowingPopup from "./followingPopup";
 import UpdateProfile from "./updateProfile";
 import { useRouter } from "next/router";
-import { Button } from "@/components/ui/button"
-import {CameraIcon, UserIcon, UsersRound} from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { CameraIcon, UserIcon, UsersRound } from "lucide-react";
 
 interface Post {
   id: string;
@@ -47,15 +47,17 @@ interface Follower {
   id: string;
   username: string;
   profilePictureUrl: string;
+  isFollowing: boolean;
 }
 
 interface Following {
   id: string;
   username: string;
   profilePictureUrl: string;
+  isFollowing: boolean;
 }
 
-const Profile = () => {
+const UserProfile = () => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -138,6 +140,7 @@ const Profile = () => {
   if (!user) {
     return <div>Loading...</div>;
   }
+
   return (
     <div className="bg-zinc-800 flex flex-col items-center justify-start min-h-screen p-4">
       <div className="flex flex-col items-center mb-6 w-full max-w-screen-sm">
@@ -216,8 +219,7 @@ const Profile = () => {
         </div>
       )}
     </div>
-
   );
 };
 
-export default Profile;
+export default UserProfile;

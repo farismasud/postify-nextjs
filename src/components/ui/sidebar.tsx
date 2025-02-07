@@ -21,7 +21,12 @@ const Sidebar: React.FC = () => {
   return (
     <aside className="w-[4rem] min-h-full bg-zinc-800 text-gray-300 flex flex-col justify-between hover:bg-zinc-700 transition-colors duration-300">
       <div className="p-4">
-        logo
+        <div className="flex justify-center mb-4">
+          <img
+          src="/logo-no-background.png"
+          alt="Logo"
+          className="w-16 h-16 object-contain" />
+        </div>
       </div>
       <div className="p-4 flex flex-col gap-8">
         <nav>

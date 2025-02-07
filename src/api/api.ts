@@ -73,13 +73,13 @@ export const updatePost = (id: string, data: Partial<PostData>): Promise<AxiosRe
   axiosInstance.post(`/update-post/${id}`, data);
 export const deletePost = (postId: string): Promise<AxiosResponse> =>
   axiosInstance.delete(`/delete-post/${postId}`);
-export const getExplorePosts = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getExplorePosts = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/explore-post", { params: { size, page } });
-export const getPostsByUserId = (userId: string, size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getPostsByUserId = (userId: string, size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get(`/users-post/${userId}`, { params: { size, page } });
 export const getPostById = (id: string): Promise<AxiosResponse> =>
   axiosInstance.get(`/post/${id}`);
-export const getFollowingPosts = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getFollowingPosts = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/following-post", { params: { size, page } });
 
 // **Follow**
@@ -87,13 +87,13 @@ export const followUser = (userIdFollow: string): Promise<AxiosResponse> =>
   axiosInstance.post("/follow", { userIdFollow });
 export const unfollowUser = (userId: string): Promise<AxiosResponse> =>
   axiosInstance.post("/unfollow", { userId });
-export const getMyFollowing = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getMyFollowing = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/my-following", { params: { size, page } });
-export const getMyFollower = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getMyFollower = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/my-follower", { params: { size, page } });
-export const getFollowingByUserId = (userId: string, size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getFollowingByUserId = (userId: string, size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get(`/following/${userId}`, { params: { size, page } });
-export const getFollowersByUserId = (userId: string, size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getFollowersByUserId = (userId: string, size: number = 100, page: number = 1,): Promise<AxiosResponse> =>
   axiosInstance.get(`/followers/${userId}`, { params: { size, page } });
 
 // **Comment**
@@ -117,9 +117,9 @@ export const getStoryById = (storyId: string): Promise<AxiosResponse> =>
   axiosInstance.get(`/story/${storyId}`);
 export const getViewsByStoryId = (storyId: string): Promise<AxiosResponse> =>
   axiosInstance.get(`/story-views/${storyId}`);
-export const getMyFollowingStory = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getMyFollowingStory = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/following-story", { params: { size, page } });
-export const getMyStory = (size: number = 10, page: number = 1): Promise<AxiosResponse> =>
+export const getMyStory = (size: number = 100, page: number = 1): Promise<AxiosResponse> =>
   axiosInstance.get("/my-story", { params: { size, page } });
 
 // **Upload Image**

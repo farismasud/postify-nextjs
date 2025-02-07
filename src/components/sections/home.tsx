@@ -47,7 +47,7 @@ const Home = () => {
 
   const fetchPosts = async () => {
     try {
-      const response = await getFollowingPosts(10, 1);
+      const response = await getFollowingPosts();
       const postsData = await Promise.all(
         response.data.data.posts.map(async (post: Post) => {
           const postResponse = await getPostById(post.id);
@@ -135,28 +135,43 @@ const Home = () => {
     }
   };
 
-const handleCommentSubmit = async (postId: string, comment: string) => {
-  if (!comment.trim()) return;
+  const handleCommentSubmit = async (e: React.FormEvent, postId: string, index: number) => {
+    e.preventDefault();
+    if (!newComment[postId]?.trim()) return;
 
-  try {
-    await createComment(postId, comment);
-    const response = await getPostById(postId);
-    setPosts((prevPosts) =>
-      prevPosts.map((post) =>
-        post.id === postId ? { ...post, comments: response.data.data.comments } : post
-      )
-    );
-    setNewComment((prev) => ({ ...prev, [postId]: "" }));
-    toast({ title: "Success", description: "Comment added successfully" });
-  } catch (error) {
-    console.error("Error creating comment:", error);
-    toast({
-      title: "Error",
-      description: "Failed to add comment",
-      variant: "destructive",
-    });
-  }
-};
+    try {
+      await createComment(postId, newComment[postId]);
+
+      // Ambil data terbaru dari post setelah komentar dibuat
+      const response = await getPostById(postId);
+      const updatedComments = response.data.data.comments.map((c: any) => ({
+        id: c.id,
+        content: c.comment,
+        user: {
+          id: c.user.id,
+          username: c.user.username,
+          profilePictureUrl: c.user.profilePictureUrl || "",
+        },
+      }));
+
+      // Update state post untuk menambahkan komentar baru
+      setPosts((prev) =>
+        prev.map((post, i) =>
+          i === index ? { ...post, comments: updatedComments } : post
+        )
+      );
+
+      // Reset input komentar hanya untuk post yang sesuai
+      setNewComment((prev) => ({ ...prev, [postId]: "" }));
+    } catch (error) {
+      console.error("Error creating comment:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add comment",
+        variant: "destructive",
+      });
+    }
+  };
 
 
   const handleCommentDelete = async (postId: string, commentId: string) => {
@@ -269,24 +284,22 @@ const handleCommentSubmit = async (postId: string, comment: string) => {
             </div>
             {post.showCommentInput && (
               <div className="flex items-center gap-2 mb-4">
-                <input
-                  type="text"
-                  className="flex-grow p-2 border rounded-lg"
-                  placeholder="Write a comment..."
-                  value={newComment[post.id] || ""}
-                  onChange={(e) =>
-                    setNewComment((prev) => ({
-                      ...prev,
-                      [post.id]: e.target.value,
-                    }))
-                  }
-                />
-                <Button
-                  variant="ghost"
-                  onClick={() => handleCommentSubmit(post.id, newComment[post.id] || "")}
-                >
-                  <Send size={20} />
-                </Button>
+                <form
+                onSubmit={(e) => handleCommentSubmit(e, post.id, index)}
+                className="flex gap-2 w-full border rounded-full p-2">
+                  <input
+                    type="text"
+                    value={newComment[post.id] || ""}
+                    onChange={(e) => setNewComment((prev) => ({ ...prev, [post.id]: e.target.value }))}
+                    placeholder="Add a comment..."
+                    className="flex-1 border-zinc-200 focus:ring-2 focus:ring-blue-500"/>
+                  <Button
+                    type="submit"
+                    variant="secondary"
+                    className="hover:bg-zinc-200 text-black transition-colors">
+                    <Send size={20} />
+                  </Button>
+                </form>
               </div>
             )}
             {post.showComments && post.comments.length > 0 && (

@@ -53,7 +53,7 @@ const RegisterComponent: React.FC<Props> = ({ onRegister }) => {
   };
 
   return (
-    <div className="w-screen h-[100vh] flex flex-col justify-center items-center bg-gray-50">
+    <div className="fixed top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-50">
       <div className="p-6 glassmorphism bg-opacity-10 rounded-lg shadow-md w-96">
         <h1 className="mb-4 text-2xl font-bold text-center text-gray-900">
           Register

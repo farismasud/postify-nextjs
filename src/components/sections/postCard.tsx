@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { X } from "lucide-react";
+import { X, Send } from "lucide-react";
 import Link from "next/link";
 
 interface Post {
@@ -110,6 +110,9 @@ const PostCard: React.FC<CardProps> = ({ postId, onClose }) => {
                 src={post.user.profilePictureUrl}
                 alt={post.user.username}
                 className="w-10 h-10 rounded-full mr-3 object-cover border border-gray-200"
+                onError={(e) => {
+                  e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                }}
               />
               <Link href={`/profile/${post.user.id}`} passHref>
                 <span className="font-bold text-gray-900 hover:text-gray-700 transition-colors cursor-pointer">
@@ -169,14 +172,14 @@ const PostCard: React.FC<CardProps> = ({ postId, onClose }) => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            className="flex-1 border-gray-200 focus:ring-2 focus:ring-blue-500"
+            className="flex-1 border-zinc-200 focus:ring-2 focus:ring-blue-500"
           />
           <Button
             type="submit"
-            variant="default"
-            className="bg-blue-500 hover:bg-blue-600 text-white transition-colors"
+            variant="secondary"
+            className="hover:bg-zinc-200 text-black transition-colors"
           >
-            Post
+            <Send size={20} />
           </Button>
         </form>
       </Card>
