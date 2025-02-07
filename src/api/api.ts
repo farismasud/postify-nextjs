@@ -4,8 +4,13 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 
+// Ambil environment variables dari process.env
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+
+if (!API_URL || !API_KEY) {
+  throw new Error("Missing API_URL or API_KEY in environment variables");
+}
 
 // Konfigurasi axios instance
 const axiosInstance: AxiosInstance = axios.create({
@@ -16,7 +21,7 @@ const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
-// Interceptor untuk menyertakan token di header
+// Interceptor untuk menyertakan token di header setiap request
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem("token");
