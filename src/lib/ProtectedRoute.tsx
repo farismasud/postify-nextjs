@@ -11,8 +11,8 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
-    // Jika tidak ada token, redirect ke halaman login
-    if (!token) {
+    // Jika tidak ada token dan bukan halaman login atau register, redirect ke halaman login
+    if (!token && router.pathname !== "/login" && router.pathname !== "/register") {
       router.push("/login");
     }
   }, [router]);
