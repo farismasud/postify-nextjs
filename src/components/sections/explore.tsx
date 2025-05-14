@@ -47,7 +47,7 @@ const Explore = () => {
       setError(
         err.response?.data?.message || err.message || "Failed to fetch posts"
       );
-      setToastMessage("Failed to fetch posts!"); // Show error message in toast
+      setToastMessage("Failed to fetch posts!");
     } finally {
       setLoading(false);
     }
@@ -69,7 +69,7 @@ const Explore = () => {
   };
 
   const handleClosePostCard = () => {
-    setSelectedPostId(null); // Close the PostCard
+    setSelectedPostId(null);
   };
 
   return (
@@ -87,51 +87,55 @@ const Explore = () => {
           {loading
             ? Array.from({ length: 8 }).map((_, index) => (
                 <Skeleton key={index} className="h-64 w-full rounded-lg" />
-              )) // Skeleton loading
-            : posts.map((post, index) => (
-                <div
-                  key={post.id}
-                  ref={index === posts.length - 1 ? lastPostRef : null}
-                  onClick={() => setSelectedPostId(post.id)}
-                  className="bg-white rounded-lg shadow-sm border border-zinc-900 cursor-pointer"
-                >
-                  {/* User Info */}
-                  {post.user && (
-                    <div className="flex items-center p-4">
+              ))
+            : posts
+                .filter((post) => post.imageUrl) // Filter hanya postingan dengan imageUrl
+                .map((post, index, filteredPosts) => (
+                  <div
+                    key={post.id}
+                    ref={
+                      index === filteredPosts.length - 1 ? lastPostRef : null
+                    } // Update ref untuk filtered array
+                    onClick={() => setSelectedPostId(post.id)}
+                    className="bg-white rounded-lg shadow-sm border border-zinc-900 cursor-pointer"
+                  >
+                    {/* User Info */}
+                    {post.user && (
+                      <div className="flex items-center p-4">
+                        <img
+                          src={post.user.profilePictureUrl}
+                          alt={post.user.username}
+                          className="w-10 h-10 rounded-full mr-3"
+                          onError={(e) => {
+                            e.currentTarget.src =
+                              "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                          }}
+                        />
+                        <span className="font-bold text-lg text-gray-600">
+                          {post.user.username}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Post Image */}
+                    {post.imageUrl && (
                       <img
-                        src={post.user.profilePictureUrl}
-                        alt={post.user.username}
-                        className="w-10 h-10 rounded-full mr-3"
+                        src={post.imageUrl}
+                        alt={post.caption}
+                        className="w-full h-auto object-cover"
                         onError={(e) => {
                           e.currentTarget.src =
-                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
+                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
                         }}
                       />
-                      <span className="font-bold text-lg text-gray-600">
-                        {post.user.username}
-                      </span>
+                    )}
+
+                    {/* Caption */}
+                    <div className="p-4">
+                      <p className="text-gray-600 mb-2">{post.caption}</p>
                     </div>
-                  )}
-
-                  {/* Post Image */}
-                  {post.imageUrl && (
-                    <img
-                      src={post.imageUrl}
-                      alt={post.caption}
-                      className="w-full h-auto object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
-                      }}
-                    />
-                  )}
-
-                  {/* Caption */}
-                  <div className="p-4">
-                    <p className="text-gray-600 mb-2">{post.caption}</p>
                   </div>
-                </div>
-              ))}
+                ))}
         </div>
 
         {/* Post Card Modal */}

@@ -155,6 +155,10 @@ const PostCard: React.FC<CardProps> = ({ postId, onClose }) => {
                 src={comment.user.profilePictureUrl}
                 alt={comment.user.username}
                 className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                onError={(e) => {
+                  e.currentTarget.src =
+                    "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"; // Set placeholder image on error
+                }}
               />
               <div className="flex-1">
                 <p className="text-sm">
