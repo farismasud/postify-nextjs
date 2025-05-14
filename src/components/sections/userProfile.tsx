@@ -153,7 +153,7 @@ const UserProfile = () => {
           }}
           className="w-32 h-32 rounded-full border-4 border-primary mb-4"
         />
-        <h1 className="text-3xl font-semibold text-primary">{user.username}</h1>
+        <h1 className="text-3xl font-semibold text-gray-300">{user.username}</h1>
         <p className="text-muted mt-2">{user.bio}</p>
         <div className="flex justify-around w-full mt-6">
           <div className="flex flex-col items-center text-primary">
@@ -193,6 +193,10 @@ const UserProfile = () => {
             <img
               src={post.imageUrl}
               alt={post.caption}
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+              }}
               className="object-cover w-full h-48 rounded-lg cursor-pointer"
               onClick={() => handlePostClick(post.id)}
             />

@@ -150,6 +150,10 @@ const PostPage: React.FC = () => {
             <img
               src={post.imageUrl}
               alt={post.caption}
+              onError={(e) => {
+                e.currentTarget.src =
+                  "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+              }}
               className="w-full h-auto rounded-md cursor-pointer mb-4"
               onClick={() => router.push(`/post/${post.id}`)}
             />
