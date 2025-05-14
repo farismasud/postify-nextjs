@@ -285,7 +285,7 @@ const StoryComponent = () => {
                   alt={selectedUserStories.stories[currentStoryIndex].caption}
                   className="w-full h-auto"
                   onError={(e) => {
-                    e.currentTarget.src = "/images/placeholder.png";
+                    e.currentTarget.src = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
                   }}
                 />
                 <div className="absolute top-0 left-0 right-0 p-4 bg-gradient-to-b from-black/50 to-transparent">
