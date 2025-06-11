@@ -103,12 +103,11 @@ const Explore = () => {
                     {post.user && (
                       <div className="flex items-center p-4">
                         <img
-                          src={post.user.profilePictureUrl}
-                          alt={post.user.username}
-                          className="w-10 h-10 rounded-full mr-3"
+                          src={post.user.profilePictureUrl || "/Portrait_Placeholder.png"} // Placeholder lokal
+                          alt={post.user.username || "Profil Pengguna"}
+                          className="w-10 h-10 rounded-full mr-3 object-cover flex-shrink-0" // Added object-cover, flex-shrink-0
                           onError={(e) => {
-                            e.currentTarget.src =
-                              "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+                            e.currentTarget.src = "/Portrait_Placeholder.png";
                           }}
                         />
                         <span className="font-bold text-lg text-gray-600">
@@ -120,14 +119,13 @@ const Explore = () => {
                     {/* Post Image */}
                     {post.imageUrl && (
                       <img
-                        src={post.imageUrl}
-                        alt={post.caption}
-                        className="w-full h-auto object-cover"
-                        onError={(e) => {
-                          e.currentTarget.src =
-                            "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
-                        }}
-                      />
+                      src={post.imageUrl}
+                      alt={post.caption || "Gambar Postingan"}
+                      className="w-full h-[300px] object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = "/Portrait_Placeholder.png";
+                      }}
+                    />
                     )}
 
                     {/* Caption */}

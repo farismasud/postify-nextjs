@@ -8,7 +8,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 const ImageUploadPost = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -18,15 +17,6 @@ const ImageUploadPost = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedFile(file);
-      setImageUrl(""); // Reset URL jika user memilih file
-    }
-  };
-
-  const handleUrlChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(event.target.value);
-    setSelectedFile(null); // Reset file jika user memasukkan URL
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
     }
   };
 
@@ -35,30 +25,30 @@ const ImageUploadPost = () => {
     setLoading(true);
 
     try {
-      if (!selectedFile && !imageUrl.trim()) {
-        throw new Error("Please select an image file or enter an image URL");
+      if (!selectedFile) {
+        throw new Error("Please select an image file to upload.");
       }
 
       if (!caption.trim()) {
-        throw new Error("Please enter a caption");
+        throw new Error("Please enter a caption.");
       }
 
-      let finalImageUrl = imageUrl.trim();
-      if (selectedFile) {
-        const uploadResponse = await uploadImage(selectedFile);
-        finalImageUrl = uploadResponse.data.url;
-      }
+      let finalImageUrl: string;
+
+      const uploadResponse = await uploadImage(selectedFile);
+      finalImageUrl = uploadResponse.data.url;
 
       await createPost({
         imageUrl: finalImageUrl,
         caption: caption.trim(),
       });
+
       toast({
         description: "Post created successfully!",
-        variant: "default" });
+        variant: "default"
+      });
       setCaption("");
       setSelectedFile(null);
-      setImageUrl("");
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -86,18 +76,7 @@ const ImageUploadPost = () => {
               onChange={handleFileChange}
               ref={fileInputRef}
               className="w-full"
-              disabled={loading || !!imageUrl}
-            />
-          </div>
-
-          <div>
-            <Input
-              type="text"
-              placeholder="Or enter image URL..."
-              value={imageUrl}
-              onChange={handleUrlChange}
-              className="w-full"
-              disabled={loading || !!selectedFile}
+              disabled={loading}
             />
           </div>
 
