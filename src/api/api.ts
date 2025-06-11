@@ -48,13 +48,14 @@ interface PostData {
 }
 
 interface UpdateProfileData {
-  name: string;
-  email: string;
-  password: string;
-  profilePictureUrl: string;
-  phoneNumber: string;
-  bio: string;
-  website: string;
+  name?: string; 
+  email?: string;
+  username?: string;
+  password?: string;
+  profilePictureUrl?: string;
+  phoneNumber?: string;
+  bio?: string;
+  website?: string;
 }
 
 // **Authentication**
